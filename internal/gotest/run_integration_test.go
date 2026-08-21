@@ -90,6 +90,14 @@ func TestRun_RelativeCoverProfileAnchored(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = os.Chdir(orig) })
+	// On some platforms (notably macOS) TempDir returns a path under a symlink
+	// (/var -> /private/var). Run anchors via filepath.Abs, which relies on
+	// os.Getwd() and yields the resolved path. Read back the effective CWD so
+	// our expected path matches what Run reports.
+	effectiveCWD, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	relProfile := filepath.Join("out", "coverage.out")
 	var log bytes.Buffer
@@ -99,7 +107,7 @@ func TestRun_RelativeCoverProfileAnchored(t *testing.T) {
 		CoverProfile: relProfile,
 		Timeout:      60 * time.Second,
 		Packages:     []string{"./..."},
-	}, filepath.Join(procCWD, "raw"), &log)
+	}, filepath.Join(effectiveCWD, "raw"), &log)
 	if err != nil {
 		t.Fatalf("run error: %v", err)
 	}
@@ -114,7 +122,7 @@ func TestRun_RelativeCoverProfileAnchored(t *testing.T) {
 	if _, err := os.Stat(res.CoverProfile); err != nil {
 		t.Fatalf("coverage profile not written to reported path: %v", err)
 	}
-	wantAbs := filepath.Join(procCWD, relProfile)
+	wantAbs := filepath.Join(effectiveCWD, relProfile)
 	if res.CoverProfile != wantAbs {
 		t.Fatalf("coverage profile anchored incorrectly: got %q want %q", res.CoverProfile, wantAbs)
 	}

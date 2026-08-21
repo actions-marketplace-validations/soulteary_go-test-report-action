@@ -96,6 +96,12 @@ func Run(ctx context.Context, opts RunOptions, rawOutputDir string, logOut io.Wr
 	if abs, err := filepath.Abs(opts.CoverProfile); err == nil {
 		opts.CoverProfile = abs
 	}
+	// `go test` will not create parent directories for -coverprofile; ensure
+	// the target directory exists so a nested relative path (e.g. out/cov.out)
+	// is written where we later stat and parse it.
+	if err := os.MkdirAll(filepath.Dir(opts.CoverProfile), 0o755); err != nil {
+		return RunResult{}, fmt.Errorf("create coverage profile dir: %w", err)
+	}
 
 	jsonlFile, err := os.Create(jsonlPath)
 	if err != nil {
