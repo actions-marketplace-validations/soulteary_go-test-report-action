@@ -1,3 +1,3 @@
 module example.com/gotestreport-fixtures/no-tests
 
-go 1.23
+go 1.26

@@ -14,7 +14,7 @@ func writeSampleModule(t *testing.T) string {
 	t.Helper()
 	dir := t.TempDir()
 	files := map[string]string{
-		"go.mod": "module example.com/sample\n\ngo 1.23\n",
+		"go.mod": "module example.com/sample\n\ngo 1.26\n",
 		"lib.go": "package sample\n\nfunc Add(a, b int) int { return a + b }\n",
 		"lib_test.go": `package sample
 
@@ -74,7 +74,7 @@ func TestRun_Integration(t *testing.T) {
 
 func TestRun_FailingTestDoesNotAbort(t *testing.T) {
 	dir := t.TempDir()
-	os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module example.com/f\n\ngo 1.23\n"), 0o644)
+	os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module example.com/f\n\ngo 1.26\n"), 0o644)
 	os.WriteFile(filepath.Join(dir, "f_test.go"), []byte(`package f
 
 import "testing"
