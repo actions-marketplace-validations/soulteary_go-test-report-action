@@ -1,8 +1,8 @@
 # Build output
 /dist/
 /bin/
-gotestreport
-gotestreport.exe
+gtr
+gtr.exe
 
 # Test and coverage artifacts
 coverage.out

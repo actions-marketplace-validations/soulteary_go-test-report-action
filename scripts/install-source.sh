@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# install-source.sh builds gotestreport from source as a fallback when a
+# install-source.sh builds gtr from source as a fallback when a
 # prebuilt release binary is unavailable or fails checksum verification.
 # It installs the binary into BIN_DIR and prints its path on stdout.
 set -euo pipefail
 
-BIN_DIR="${1:-${RUNNER_TEMP:-/tmp}/gotestreport-bin}"
+BIN_DIR="${1:-${RUNNER_TEMP:-/tmp}/gtr-bin}"
 # ACTION_PATH is the directory of the composite action checkout (the module
-# root that contains cmd/gotestreport). GitHub sets GITHUB_ACTION_PATH.
+# root that contains cmd/gtr). GitHub sets GITHUB_ACTION_PATH.
 ACTION_PATH="${GITHUB_ACTION_PATH:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
-BIN_NAME="gotestreport"
+BIN_NAME="gtr"
 
 log() { printf '%s\n' "$*" >&2; }
 
@@ -24,7 +24,7 @@ log "building ${BIN_NAME} from source at ${ACTION_PATH}"
 # pinned action version. Never fetch code from an untrusted location.
 (
   cd "$ACTION_PATH"
-  GOFLAGS="${GOFLAGS:-}" go build -trimpath -o "${BIN_DIR}/${binfile}" ./cmd/gotestreport
+  GOFLAGS="${GOFLAGS:-}" go build -trimpath -o "${BIN_DIR}/${binfile}" ./cmd/gtr
 )
 log "built ${BIN_DIR}/${binfile}"
 printf '%s\n' "${BIN_DIR}/${binfile}"

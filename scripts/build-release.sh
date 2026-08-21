@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# build-release.sh cross-compiles gotestreport for all supported platforms,
+# build-release.sh cross-compiles gtr for all supported platforms,
 # archives each build (tar.gz for unix, zip for windows), and writes a
 # checksums.txt with SHA256 sums. Output goes to DIST_DIR.
 #
@@ -8,8 +8,8 @@ set -euo pipefail
 
 VERSION="${1:?version tag required, e.g. v1.0.0}"
 DIST_DIR="${2:-dist}"
-BIN_NAME="gotestreport"
-PKG="./cmd/gotestreport"
+BIN_NAME="gtr"
+PKG="./cmd/gtr"
 
 # os/arch matrix.
 PLATFORMS=(

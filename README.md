@@ -136,9 +136,9 @@ In your README, reference the generated badge with a relative link:
 The action is a thin wrapper around a Go CLI you can run locally to reproduce CI:
 
 ```bash
-go install github.com/soulteary/go-test-report-action/cmd/gotestreport@latest
+go install github.com/soulteary/go-test-report-action/cmd/gtr@latest
 
-gotestreport run \
+gtr run \
   --packages ./... \
   --cover-mode atomic \
   --coverage-threshold 80 \
@@ -156,7 +156,7 @@ gotestreport run \
 | Subcommand | Description |
 | --- | --- |
 | `run` | Run tests, build the report/badge/JSON, and exit with a semantic code. |
-| `validate-paths` | Resolve and verify that paths stay inside a workspace root; used internally by the composite Action. Usage: `gotestreport validate-paths -workspace <root> [-path p ...]`. |
+| `validate-paths` | Resolve and verify that paths stay inside a workspace root; used internally by the composite Action. Usage: `gtr validate-paths -workspace <root> [-path p ...]`. |
 | `help`, `-h`, `--help` | Print usage. |
 
 ### `run` flags
@@ -248,7 +248,7 @@ planned for a later version.
 ## Release and versioning
 
 - Semantic versioning; publishing `v1.0.0` also updates the moving `v1` tag.
-- Release assets are named `gotestreport_<version>_<os>_<arch>.tar.gz` (`.zip`
+- Release assets are named `gtr_<version>_<os>_<arch>.tar.gz` (`.zip`
   on Windows) for Linux/macOS/Windows on amd64/arm64, with a `checksums.txt`.
 - `version: latest` resolves the newest release; a fixed version downloads that
   release. On download or checksum failure the action falls back to building

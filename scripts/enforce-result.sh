@@ -4,10 +4,10 @@
 # the summary was written, and any allowed commit was made.
 set -euo pipefail
 
-EXITCODE_FILE="${GTR_EXITCODE_FILE:-${RUNNER_TEMP:-/tmp}/gotestreport.exit}"
+EXITCODE_FILE="${GTR_EXITCODE_FILE:-${RUNNER_TEMP:-/tmp}/gtr.exit}"
 
 if [ ! -f "$EXITCODE_FILE" ]; then
-  echo "::error::gotestreport exit code file not found: $EXITCODE_FILE"
+  echo "::error::gtr exit code file not found: $EXITCODE_FILE"
   exit 1
 fi
 
@@ -34,7 +34,7 @@ case "$code" in
     echo "::error::Go toolchain or internal execution error."
     ;;
   *)
-    echo "::error::gotestreport failed with exit code ${code}."
+    echo "::error::gtr failed with exit code ${code}."
     ;;
 esac
 

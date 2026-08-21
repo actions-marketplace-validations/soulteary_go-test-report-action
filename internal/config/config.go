@@ -14,7 +14,7 @@ const (
 )
 
 // Config holds every resolved input needed to run tests and produce reports.
-// Values are populated from CLI flags (see cmd/gotestreport) and validated via
+// Values are populated from CLI flags (see cmd/gtr) and validated via
 // Validate before use.
 type Config struct {
 	// Directory is the module root in which `go list`/`go test` run.

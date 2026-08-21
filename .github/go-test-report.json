@@ -14,7 +14,7 @@
   },
   "packages": [
     {
-      "name": "cmd/gotestreport",
+      "name": "cmd/gtr",
       "status": "pass",
       "tests": 7,
       "failed": 0,

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install-release.sh downloads a prebuilt gotestreport binary from GitHub
+# install-release.sh downloads a prebuilt gtr binary from GitHub
 # Releases, verifies its SHA256 against checksums.txt, and installs it to
 # BIN_DIR. On any failure it exits non-zero so the caller can fall back to a
 # source build. It never evaluates untrusted input via a shell.
@@ -7,8 +7,8 @@ set -euo pipefail
 
 REPO="${GTR_REPO:-soulteary/go-test-report-action}"
 VERSION="${1:-latest}"
-BIN_DIR="${2:-${RUNNER_TEMP:-/tmp}/gotestreport-bin}"
-BIN_NAME="gotestreport"
+BIN_DIR="${2:-${RUNNER_TEMP:-/tmp}/gtr-bin}"
+BIN_NAME="gtr"
 
 log() { printf '%s\n' "$*" >&2; }
 

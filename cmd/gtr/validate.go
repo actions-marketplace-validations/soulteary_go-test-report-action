@@ -15,7 +15,7 @@ import (
 //
 // Usage:
 //
-//	gotestreport validate-paths -workspace <root> [-path p ...]
+//	gtr validate-paths -workspace <root> [-path p ...]
 //
 // On success it prints the resolved absolute path for each input (one per line)
 // and exits 0. On any escape/invalid path it prints an error to stderr and

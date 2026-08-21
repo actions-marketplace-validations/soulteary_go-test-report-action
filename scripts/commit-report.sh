@@ -21,7 +21,7 @@ REPORT="${INPUT_REPORT_OUTPUT:-.github/go-test-report.md}"
 BADGE="${INPUT_BADGE_OUTPUT:-.github/coverage.svg}"
 JSON="${INPUT_JSON_OUTPUT:-.github/go-test-report.json}"
 
-EXITCODE_FILE="${GTR_EXITCODE_FILE:-${RUNNER_TEMP:-/tmp}/gotestreport.exit}"
+EXITCODE_FILE="${GTR_EXITCODE_FILE:-${RUNNER_TEMP:-/tmp}/gtr.exit}"
 GITHUB_OUTPUT="${GITHUB_OUTPUT:-/dev/stdout}"
 
 emit() { printf '%s=%s\n' "$1" "$2" >> "$GITHUB_OUTPUT"; }

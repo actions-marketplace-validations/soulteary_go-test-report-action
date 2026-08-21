@@ -13,10 +13,10 @@ log() { printf '%s\n' "$*" >&2; }
 
 # Build a validation binary from the action source (source of truth for the
 # escape rules). This is fast and avoids duplicating the logic in bash.
-VBIN="${RUNNER_TEMP:-/tmp}/gotestreport-validate"
+VBIN="${RUNNER_TEMP:-/tmp}/gtr-validate"
 (
   cd "$ACTION_PATH"
-  go build -o "$VBIN" ./cmd/gotestreport
+  go build -o "$VBIN" ./cmd/gtr
 )
 
 args=(validate-paths -workspace "$WS")

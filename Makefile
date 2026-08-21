@@ -1,5 +1,5 @@
-BINARY := gotestreport
-PKG := ./cmd/gotestreport
+BINARY := gtr
+PKG := ./cmd/gtr
 COVERPROFILE := coverage.out
 
 .PHONY: all build test cover cover-html vet fmt fmt-check tidy lint clean smoke

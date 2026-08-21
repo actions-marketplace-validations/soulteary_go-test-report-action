@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# run-report.sh runs the gotestreport CLI, captures its semantic exit code
+# run-report.sh runs the gtr CLI, captures its semantic exit code
 # WITHOUT failing this step, extracts machine outputs from the deterministic
 # JSON report, and writes them to GITHUB_OUTPUT. The saved exit code is written
 # to a file so the later "Enforce result" step can fail the job.
@@ -7,9 +7,9 @@
 # All user inputs are passed as explicit CLI arguments (never via eval/bash -c).
 set -uo pipefail
 
-BIN="${GTR_BIN:?GTR_BIN must point to the gotestreport binary}"
+BIN="${GTR_BIN:?GTR_BIN must point to the gtr binary}"
 GITHUB_OUTPUT="${GITHUB_OUTPUT:-/dev/stdout}"
-EXITCODE_FILE="${GTR_EXITCODE_FILE:-${RUNNER_TEMP:-/tmp}/gotestreport.exit}"
+EXITCODE_FILE="${GTR_EXITCODE_FILE:-${RUNNER_TEMP:-/tmp}/gtr.exit}"
 
 # Required paths / values (validated & resolved earlier by validate-paths).
 DIRECTORY="${INPUT_DIRECTORY:-.}"
@@ -41,7 +41,7 @@ args=(run
   -markdown-output "$REPORT_OUTPUT"
   -svg-output "$BADGE_OUTPUT"
   -raw-output-dir "$RAW_OUTPUT"
-  -summary-output "${RUNNER_TEMP:-/tmp}/gotestreport-summary.md"
+  -summary-output "${RUNNER_TEMP:-/tmp}/gtr-summary.md"
 )
 
 if [ "$RACE" = "true" ]; then
@@ -72,7 +72,7 @@ code=$?
 set -e 2>/dev/null || true
 
 printf '%s' "$code" > "$EXITCODE_FILE"
-log "gotestreport exit code: $code (saved to $EXITCODE_FILE)"
+log "gtr exit code: $code (saved to $EXITCODE_FILE)"
 
 # Map the semantic exit code to a status string.
 status="error"

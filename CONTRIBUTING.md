@@ -16,7 +16,7 @@ make all        # fmt-check + vet + test
 
 | Command | What it does |
 | --- | --- |
-| `make build` | Build the `gotestreport` binary into `bin/`. |
+| `make build` | Build the `gtr` binary into `bin/`. |
 | `make test` | Run all unit and integration tests. |
 | `make cover` | Run tests with coverage and print the total. |
 | `make cover-html` | Open the HTML coverage report. |

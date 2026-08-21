@@ -15,7 +15,7 @@
 
 | Package | Status | Tests | Failed | Coverage |
 | --- | --- | --- | --- | --- |
-| cmd/gotestreport | pass | 7 | 0 | 63.16% |
+| cmd/gtr | pass | 7 | 0 | 63.16% |
 | internal/config | pass | 7 | 0 | 100.00% |
 | internal/coverage | pass | 12 | 0 | 94.44% |
 | internal/gotest | pass | 24 | 0 | 91.81% |

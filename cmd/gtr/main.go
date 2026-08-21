@@ -1,4 +1,4 @@
-// Command gotestreport runs `go test -json`, aggregates results and coverage,
+// Command gtr runs `go test -json`, aggregates results and coverage,
 // and generates deterministic JSON/Markdown/SVG reports plus a Job Summary.
 //
 // Exit codes (see internal/config):
@@ -40,7 +40,7 @@ func main() {
 // dispatch routes subcommands: "run" and "validate-paths".
 func dispatch(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	if len(args) == 0 {
-		fmt.Fprintln(stderr, "usage: gotestreport run [flags]")
+		fmt.Fprintln(stderr, "usage: gtr run [flags]")
 		return config.ExitConfigError
 	}
 	switch args[0] {
@@ -49,7 +49,7 @@ func dispatch(ctx context.Context, args []string, stdout, stderr io.Writer) int 
 	case "validate-paths":
 		return validatePathsCmd(args[1:], stdout, stderr)
 	case "-h", "--help", "help":
-		fmt.Fprintln(stdout, "usage: gotestreport <run|validate-paths> [flags]")
+		fmt.Fprintln(stdout, "usage: gtr <run|validate-paths> [flags]")
 		return config.ExitSuccess
 	default:
 		fmt.Fprintf(stderr, "unknown subcommand %q\n", args[0])
@@ -187,7 +187,7 @@ func execute(ctx context.Context, cfg *config.Config, testArgs []string, stdout,
 	rawDir := cfg.RawOutputDir
 	cleanup := func() {}
 	if rawDir == "" {
-		tmp, terr := os.MkdirTemp("", "gotestreport-*")
+		tmp, terr := os.MkdirTemp("", "gtr-*")
 		if terr != nil {
 			fmt.Fprintf(stderr, "toolchain error: %v\n", terr)
 			return config.ExitToolchainError
