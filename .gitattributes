@@ -1,0 +1,15 @@
+# Normalize line endings to LF for all text files so golden-file tests
+# stay stable across platforms (avoids CRLF conversion on Windows CI).
+* text=auto eol=lf
+
+# Golden test fixtures must always be LF; the report generator emits LF.
+internal/report/testdata/report.json text eol=lf
+internal/report/testdata/report.md   text eol=lf
+internal/report/testdata/badge.svg   text eol=lf
+internal/report/testdata/badge_unknown.svg text eol=lf
+
+# Binary types (none currently, but guard common ones).
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary

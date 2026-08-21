@@ -32,8 +32,12 @@ func assertGolden(t *testing.T, name string, got []byte) {
 	if err != nil {
 		t.Fatalf("read golden %s (run with -update): %v", p, err)
 	}
-	if string(got) != string(want) {
-		t.Fatalf("golden mismatch for %s\n--- got ---\n%s\n--- want ---\n%s", name, got, want)
+	// Normalize CRLF -> LF so the comparison is stable even when the golden
+	// files are checked out with Windows line endings (e.g. core.autocrlf).
+	gotStr := strings.ReplaceAll(string(got), "\r\n", "\n")
+	wantStr := strings.ReplaceAll(string(want), "\r\n", "\n")
+	if gotStr != wantStr {
+		t.Fatalf("golden mismatch for %s\n--- got ---\n%s\n--- want ---\n%s", name, gotStr, wantStr)
 	}
 }
 

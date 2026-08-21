@@ -24,27 +24,29 @@ jobs:
         with:
           go-version-file: go.mod
 
-      # Copy the passing fixture into a throwaway workspace so the action runs
-      # against a real, self-contained module.
+      # Copy the passing fixture into a throwaway project *inside* the workspace
+      # so the action runs against a real, self-contained module while all input
+      # and output paths stay within GITHUB_WORKSPACE (required by the action's
+      # path-escape validation).
       - name: Stage fixture project
         shell: bash
         run: |
-          mkdir -p "${RUNNER_TEMP}/proj"
-          cp -R testdata/passing/. "${RUNNER_TEMP}/proj/"
-          ls -la "${RUNNER_TEMP}/proj"
+          mkdir -p "${GITHUB_WORKSPACE}/_smoke-proj"
+          cp -R testdata/passing/. "${GITHUB_WORKSPACE}/_smoke-proj/"
+          ls -la "${GITHUB_WORKSPACE}/_smoke-proj"
 
       - name: Run Go Test Report (source build)
         id: report
         uses: ./
         with:
-          directory: ${{ runner.temp }}/proj
+          directory: _smoke-proj
           go_version_file: go.mod
           coverage_threshold: "80"
           package_threshold: "50"
-          report_output: ${{ runner.temp }}/proj/.github/go-test-report.md
-          badge_output: ${{ runner.temp }}/proj/.github/coverage.svg
-          json_output: ${{ runner.temp }}/proj/.github/go-test-report.json
-          raw_output: ${{ runner.temp }}/proj/.github/test-results
+          report_output: _smoke-proj/.github/go-test-report.md
+          badge_output: _smoke-proj/.github/coverage.svg
+          json_output: _smoke-proj/.github/go-test-report.json
+          raw_output: _smoke-proj/.github/test-results
           commit: "false"
           version: "source"
 
@@ -62,9 +64,9 @@ jobs:
           [ "$STATUS" = "passed" ] || { echo "::error::expected status=passed"; exit 1; }
           [ "$EXIT_CODE" = "0" ] || { echo "::error::expected exit_code=0"; exit 1; }
           [ "$COMMITTED" = "false" ] || { echo "::error::expected committed=false"; exit 1; }
-          for f in "${RUNNER_TEMP}/proj/.github/go-test-report.md" \
-                   "${RUNNER_TEMP}/proj/.github/coverage.svg" \
-                   "${RUNNER_TEMP}/proj/.github/go-test-report.json"; do
+          for f in "${GITHUB_WORKSPACE}/_smoke-proj/.github/go-test-report.md" \
+                   "${GITHUB_WORKSPACE}/_smoke-proj/.github/coverage.svg" \
+                   "${GITHUB_WORKSPACE}/_smoke-proj/.github/go-test-report.json"; do
             [ -f "$f" ] || { echo "::error::missing $f"; exit 1; }
           done
           echo "smoke test passed"
