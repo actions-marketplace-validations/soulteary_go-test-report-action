@@ -28,7 +28,7 @@ coverage data.
 ## Quick start (30 seconds)
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: actions/checkout@v7
 - id: test
   uses: soulteary/go-test-report-action@v1
   with:
@@ -51,7 +51,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: soulteary/go-test-report-action@v1
         with:
           race: "true"
@@ -59,7 +59,7 @@ jobs:
           package_threshold: "60"
           commit: "false"
       - if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: go-test-report-${{ github.run_id }}
           path: .github/test-results/
@@ -81,7 +81,7 @@ jobs:
   report:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: soulteary/go-test-report-action@v1
         with:
           coverage_threshold: "80"
