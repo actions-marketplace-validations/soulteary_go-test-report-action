@@ -1,5 +1,5 @@
-name: "Go Test Report"
-description: "Run Go tests once, collect results and coverage, and generate a deterministic Markdown report, self-contained SVG badge and JSON data with coverage gates. No external services."
+name: "GTR - Go Test Report"
+description: "Run Go tests, collect coverage, and generate a deterministic Markdown report, SVG badge, and JSON with coverage gates."
 author: "soulteary"
 branding:
   icon: "check-circle"
