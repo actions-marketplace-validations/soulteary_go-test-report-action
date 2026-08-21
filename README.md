@@ -147,6 +147,43 @@ gotestreport run \
   --svg-output coverage.svg
 ```
 
+> **Note:** the CLI's `run` default `--cover-mode` is `set`, whereas the Action
+> layer defaults `cover_mode` to `atomic`. Pass `--cover-mode atomic` locally to
+> reproduce CI exactly (required if you also pass `--race`).
+
+### Subcommands
+
+| Subcommand | Description |
+| --- | --- |
+| `run` | Run tests, build the report/badge/JSON, and exit with a semantic code. |
+| `validate-paths` | Resolve and verify that paths stay inside a workspace root; used internally by the composite Action. Usage: `gotestreport validate-paths -workspace <root> [-path p ...]`. |
+| `help`, `-h`, `--help` | Print usage. |
+
+### `run` flags
+
+| Flag | Default | Description |
+| --- | --- | --- |
+| `--directory` | `.` | Module root directory to run tests in. |
+| `--packages` | `./...` | Package patterns to test (space-separated). |
+| `--exclude` | (empty) | Regexp matched against import path to exclude; repeatable. |
+| `--race` | `false` | Enable the race detector (requires `--cover-mode atomic`). |
+| `--cover-mode` | `set` | Coverage mode: `set`, `count`, or `atomic`. |
+| `--cover-pkg` | (empty) | Value for `go test -coverpkg`. |
+| `--timeout` | `10m` | `go test -timeout` value. |
+| `--test-args` | (empty) | Extra shell-like args appended to `go test` (tokenized, never shell-evaluated). |
+| `--coverage-threshold` | `0` | Minimum total coverage percentage `[0,100]`; `0` disables. |
+| `--package-threshold` | `0` | Minimum per-package coverage percentage `[0,100]`; `0` disables. |
+| `--json-output` | `test-report.json` | Path for the deterministic JSON report. |
+| `--markdown-output` | `test-report.md` | Path for the deterministic Markdown report. |
+| `--svg-output` | `coverage.svg` | Path for the coverage SVG badge. |
+| `--summary-output` | (stdout) | Path for the dynamic Job Summary (empty writes to stdout). |
+| `--raw-output-dir` | (temp dir) | Directory for raw artifacts (`test.jsonl`, `coverage.out`); empty uses a temp dir. |
+| `--max-failures` | (see CLI) | Max failing cases rendered in Markdown. |
+| `--max-packages` | (see CLI) | Max package rows rendered in Markdown. |
+| `--sha` | (empty) | Commit SHA (Job Summary only). |
+| `--branch` | (empty) | Branch name (Job Summary only). |
+| `--runner` | (empty) | Runner label (Job Summary only). |
+
 ### Exit codes
 
 | Code | Meaning |

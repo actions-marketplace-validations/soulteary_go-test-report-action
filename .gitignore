@@ -1,0 +1,28 @@
+# Build output
+/dist/
+/bin/
+gotestreport
+gotestreport.exe
+
+# Test and coverage artifacts
+coverage.out
+coverage.txt
+*.test
+*.out
+test.jsonl
+.github/test-results/
+
+# The stable, committed report artifacts are intentionally tracked:
+!.github/coverage.svg
+!.github/go-test-report.md
+!.github/go-test-report.json
+
+# Go workspace files
+go.work
+go.work.sum
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp

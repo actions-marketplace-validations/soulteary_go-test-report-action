@@ -37,7 +37,7 @@ func main() {
 	os.Exit(code)
 }
 
-// dispatch routes subcommands. Currently only "run" is supported.
+// dispatch routes subcommands: "run" and "validate-paths".
 func dispatch(ctx context.Context, args []string, stdout, stderr io.Writer) int {
 	if len(args) == 0 {
 		fmt.Fprintln(stderr, "usage: gotestreport run [flags]")

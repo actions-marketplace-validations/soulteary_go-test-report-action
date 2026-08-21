@@ -23,6 +23,10 @@ cover-html: cover
 vet:
 	go vet ./...
 
+# Requires golangci-lint: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+lint:
+	golangci-lint run ./...
+
 fmt:
 	gofmt -w $(shell git ls-files '*.go')
 
