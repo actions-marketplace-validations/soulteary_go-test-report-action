@@ -119,7 +119,7 @@ outputs:
     value: ${{ steps.run.outputs.exit_code }}
   committed:
     description: "Whether a report commit was produced."
-    value: ${{ steps.commit.outputs.committed }}
+    value: ${{ steps.commit.outputs.committed || 'false' }}
   commit_sha:
     description: "SHA of the produced commit, or empty."
     value: ${{ steps.commit.outputs.commit_sha }}
