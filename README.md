@@ -8,7 +8,7 @@ locally from your own `go test` run, so it works on public repos, GitHub
 Enterprise, air-gapped mirrors, and projects that will not upload source or
 coverage data.
 
-[![Go Test Coverage](./.github/coverage.svg)](./.github/go-test-report.json)
+[![Go Test Coverage](./.github/coverage.svg)](./.github/go-test-report.md)
 
 ## What it does
 
