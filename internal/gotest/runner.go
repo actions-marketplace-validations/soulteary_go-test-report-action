@@ -89,6 +89,13 @@ func Run(ctx context.Context, opts RunOptions, rawOutputDir string, logOut io.Wr
 	if opts.CoverProfile == "" {
 		opts.CoverProfile = filepath.Join(rawOutputDir, "coverage.out")
 	}
+	// `go test` runs with opts.Dir as its working directory, so a relative
+	// -coverprofile would be resolved against opts.Dir instead of this process's
+	// CWD. Anchor it to an absolute path so the profile is written where we
+	// later stat and parse it, regardless of opts.Dir.
+	if abs, err := filepath.Abs(opts.CoverProfile); err == nil {
+		opts.CoverProfile = abs
+	}
 
 	jsonlFile, err := os.Create(jsonlPath)
 	if err != nil {

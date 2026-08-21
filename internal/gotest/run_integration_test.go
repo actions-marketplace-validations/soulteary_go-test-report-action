@@ -72,6 +72,57 @@ func TestRun_Integration(t *testing.T) {
 	}
 }
 
+// TestRun_RelativeCoverProfileAnchored guards against a regression where a
+// relative -coverprofile was resolved against opts.Dir (the `go test` working
+// directory) instead of this process's CWD, causing the profile to be written
+// to a nested, wrong location and the coverage gate to see no data.
+func TestRun_RelativeCoverProfileAnchored(t *testing.T) {
+	moduleDir := writeSampleModule(t)
+
+	// Run from a separate process CWD so a relative CoverProfile that is
+	// resolved against opts.Dir would land in the wrong place.
+	procCWD := t.TempDir()
+	orig, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Chdir(procCWD); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.Chdir(orig) })
+
+	relProfile := filepath.Join("out", "coverage.out")
+	var log bytes.Buffer
+	res, err := Run(context.Background(), RunOptions{
+		Dir:          moduleDir,
+		CoverMode:    "set",
+		CoverProfile: relProfile,
+		Timeout:      60 * time.Second,
+		Packages:     []string{"./..."},
+	}, filepath.Join(procCWD, "raw"), &log)
+	if err != nil {
+		t.Fatalf("run error: %v", err)
+	}
+	if res.CoverProfile == "" {
+		t.Fatal("expected coverage profile to be reported")
+	}
+	if !filepath.IsAbs(res.CoverProfile) {
+		t.Fatalf("expected an absolute coverage profile path, got %q", res.CoverProfile)
+	}
+	// The profile must exist at the path anchored to the process CWD, not
+	// nested inside moduleDir.
+	if _, err := os.Stat(res.CoverProfile); err != nil {
+		t.Fatalf("coverage profile not written to reported path: %v", err)
+	}
+	wantAbs := filepath.Join(procCWD, relProfile)
+	if res.CoverProfile != wantAbs {
+		t.Fatalf("coverage profile anchored incorrectly: got %q want %q", res.CoverProfile, wantAbs)
+	}
+	if _, err := os.Stat(filepath.Join(moduleDir, relProfile)); err == nil {
+		t.Fatalf("coverage profile leaked into module dir at %q", filepath.Join(moduleDir, relProfile))
+	}
+}
+
 func TestRun_FailingTestDoesNotAbort(t *testing.T) {
 	dir := t.TempDir()
 	os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module example.com/f\n\ngo 1.26\n"), 0o644)
