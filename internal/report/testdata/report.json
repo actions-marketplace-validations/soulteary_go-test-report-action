@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "tests": {
+    "total": 5,
+    "passed": 3,
+    "failed": 1,
+    "skipped": 1
+  },
+  "coverage": {
+    "covered_statements": 84,
+    "total_statements": 100,
+    "percentage": 84,
+    "threshold": 80
+  },
+  "packages": [
+    {
+      "name": ".",
+      "status": "pass",
+      "tests": 2,
+      "failed": 0,
+      "coverage": 80
+    },
+    {
+      "name": "empty",
+      "status": "no_tests",
+      "tests": 0,
+      "failed": 0,
+      "coverage": null
+    },
+    {
+      "name": "pkgb",
+      "status": "fail",
+      "tests": 3,
+      "failed": 1,
+      "coverage": 88
+    }
+  ],
+  "failures": [
+    {
+      "package": "pkgb",
+      "test": "TestThing",
+      "output": "  want 1 got 2"
+    }
+  ]
+}

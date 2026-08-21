@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "tests": {
+    "total": 81,
+    "passed": 81,
+    "failed": 0,
+    "skipped": 0
+  },
+  "coverage": {
+    "covered_statements": 631,
+    "total_statements": 721,
+    "percentage": 87.52,
+    "threshold": 85
+  },
+  "packages": [
+    {
+      "name": "cmd/gotestreport",
+      "status": "pass",
+      "tests": 7,
+      "failed": 0,
+      "coverage": 63.16
+    },
+    {
+      "name": "internal/config",
+      "status": "pass",
+      "tests": 7,
+      "failed": 0,
+      "coverage": 100
+    },
+    {
+      "name": "internal/coverage",
+      "status": "pass",
+      "tests": 12,
+      "failed": 0,
+      "coverage": 94.44
+    },
+    {
+      "name": "internal/gotest",
+      "status": "pass",
+      "tests": 24,
+      "failed": 0,
+      "coverage": 91.81
+    },
+    {
+      "name": "internal/model",
+      "status": "no_tests",
+      "tests": 0,
+      "failed": 0,
+      "coverage": null
+    },
+    {
+      "name": "internal/pathguard",
+      "status": "pass",
+      "tests": 11,
+      "failed": 0,
+      "coverage": 92
+    },
+    {
+      "name": "internal/report",
+      "status": "pass",
+      "tests": 20,
+      "failed": 0,
+      "coverage": 97.52
+    }
+  ],
+  "failures": null
+}

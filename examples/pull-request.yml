@@ -1,0 +1,37 @@
+# Pull request workflow: run tests and coverage gates, read-only, no write-back.
+# Fork PRs use a read-only GITHUB_TOKEN and require no secrets.
+name: Go Test
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: test
+        # Pin to a full commit SHA in production and let Dependabot/Renovate
+        # update it; the public major tag is shown here for readability.
+        uses: soulteary/go-test-report-action@v1
+        with:
+          directory: "."
+          go_version_file: "go.mod"
+          packages: "./..."
+          race: "true"
+          coverage_threshold: "80"
+          package_threshold: "60"
+          commit: "false"
+
+      - name: Upload raw reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: go-test-report-${{ github.run_id }}
+          path: .github/test-results/
+          retention-days: 14

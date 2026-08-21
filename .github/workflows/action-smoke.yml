@@ -1,0 +1,116 @@
+name: Action smoke test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Run action against a fixture
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      # Copy the passing fixture into a throwaway workspace so the action runs
+      # against a real, self-contained module.
+      - name: Stage fixture project
+        shell: bash
+        run: |
+          mkdir -p "${RUNNER_TEMP}/proj"
+          cp -R testdata/passing/. "${RUNNER_TEMP}/proj/"
+          ls -la "${RUNNER_TEMP}/proj"
+
+      - name: Run Go Test Report (source build)
+        id: report
+        uses: ./
+        with:
+          directory: ${{ runner.temp }}/proj
+          go_version_file: go.mod
+          coverage_threshold: "80"
+          package_threshold: "50"
+          report_output: ${{ runner.temp }}/proj/.github/go-test-report.md
+          badge_output: ${{ runner.temp }}/proj/.github/coverage.svg
+          json_output: ${{ runner.temp }}/proj/.github/go-test-report.json
+          raw_output: ${{ runner.temp }}/proj/.github/test-results
+          commit: "false"
+          version: "source"
+
+      - name: Assert outputs
+        shell: bash
+        env:
+          STATUS: ${{ steps.report.outputs.status }}
+          COVERAGE: ${{ steps.report.outputs.coverage }}
+          TESTS: ${{ steps.report.outputs.tests }}
+          EXIT_CODE: ${{ steps.report.outputs.exit_code }}
+          COMMITTED: ${{ steps.report.outputs.committed }}
+        run: |
+          set -euo pipefail
+          echo "status=$STATUS coverage=$COVERAGE tests=$TESTS exit_code=$EXIT_CODE committed=$COMMITTED"
+          [ "$STATUS" = "passed" ] || { echo "::error::expected status=passed"; exit 1; }
+          [ "$EXIT_CODE" = "0" ] || { echo "::error::expected exit_code=0"; exit 1; }
+          [ "$COMMITTED" = "false" ] || { echo "::error::expected committed=false"; exit 1; }
+          for f in "${RUNNER_TEMP}/proj/.github/go-test-report.md" \
+                   "${RUNNER_TEMP}/proj/.github/coverage.svg" \
+                   "${RUNNER_TEMP}/proj/.github/go-test-report.json"; do
+            [ -f "$f" ] || { echo "::error::missing $f"; exit 1; }
+          done
+          echo "smoke test passed"
+
+  commit-scope:
+    name: Commit stages only the three stable files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Verify commit-report.sh only adds allowed files
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp -d)"
+          cd "$tmp"
+          git init -q
+          git config user.email t@example.com
+          git config user.name test
+          mkdir -p .github
+          echo "old" > .github/go-test-report.md
+          echo "old" > .github/coverage.svg
+          echo "old" > .github/go-test-report.json
+          echo "leftover" > stray-file.txt
+          git add -A && git commit -qm init
+          # Modify a report file AND an unrelated file.
+          echo "new" > .github/go-test-report.md
+          echo "modified" > stray-file.txt
+          export GITHUB_OUTPUT="$tmp/out.txt"; : > "$GITHUB_OUTPUT"
+          export RUNNER_TEMP="$tmp"
+          export GTR_EXITCODE_FILE="$tmp/exit"; echo 0 > "$GTR_EXITCODE_FILE"
+          export INPUT_COMMIT=true
+          export INPUT_COMMIT_ON_FAILURE=false
+          export GITHUB_EVENT_NAME=workflow_dispatch
+          export INPUT_REPORT_OUTPUT=.github/go-test-report.md
+          export INPUT_BADGE_OUTPUT=.github/coverage.svg
+          export INPUT_JSON_OUTPUT=.github/go-test-report.json
+          # No remote: push fails, but the local commit must still be scoped.
+          bash "${GITHUB_WORKSPACE}/scripts/commit-report.sh" || true
+          # The stray file must NOT be part of the last commit.
+          if git show --name-only --pretty=format: HEAD | grep -q 'stray-file.txt'; then
+            echo "::error::commit incorrectly included stray-file.txt"; exit 1
+          fi
+          if ! git show --name-only --pretty=format: HEAD | grep -q 'go-test-report.md'; then
+            echo "::error::commit missing report file"; exit 1
+          fi
+          echo "commit scope verified"
